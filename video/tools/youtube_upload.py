@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Upload dist/demo.mp4 to YouTube as UNLISTED, add the SRT captions, and link it from the README.
+"""Optional last step of the demo-video skill: upload dist/demo.mp4 to YouTube as UNLISTED, add the SRT captions,
+and link it from the README.
+
+Title, description and tags come from the ```scene-config block of the demo script (title, subtitle,
+youtube_description, youtube_tags) unless overridden on the command line.
 
 Privacy is hardcoded to "unlisted" on purpose: this script never publishes a public video.
 
@@ -14,12 +18,23 @@ Notes: an unverified API project may only upload private videos until it passes 
 comes out private, switch it to unlisted in YouTube Studio once. Uploading costs about 1,600 quota units (default 10,000/day).
 A second upload creates a second video, so the script refuses to run again unless you pass --new.
 """
-import argparse, json, pathlib, re, shutil, subprocess, sys
+import argparse, json, pathlib, re, shutil, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 YT = ROOT / "video" / ".yt"
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtube.force-ssl"]
 START, END = "<!-- demo-video:start -->", "<!-- demo-video:end -->"
+
+
+def scene_config(script):
+    """Minimal read of the scene-config block: top-level `key: value` lines."""
+    m = re.search(r"```scene-config\n(.*?)```", script.read_text(), re.S) if script.exists() else None
+    cfg = {}
+    for line in (m.group(1).splitlines() if m else []):
+        k, _, v = line.partition(":")
+        if v.strip() and not line.startswith((" ", "#")):
+            cfg[k.strip()] = v.split("  #")[0].strip().strip('"')
+    return cfg
 
 
 def credentials():
@@ -46,7 +61,7 @@ def upload(a):
 
     yt = build("youtube", "v3", credentials=credentials())
     body = {
-        "snippet": {"title": a.title, "description": a.description, "categoryId": "28", "tags": ["neo4j", "graph data science", "pregel", "fraud detection"]},
+        "snippet": {"title": a.title, "description": a.description, "categoryId": "28", "tags": a.tags},
         "status": {"privacyStatus": "unlisted", "selfDeclaredMadeForKids": False},
     }
     media = MediaFileUpload(str(a.video), mimetype="video/mp4", chunksize=8 * 1024 * 1024, resumable=True)
@@ -77,7 +92,7 @@ def update_readme(vid, thumb):
     if START in text and END in text:
         text = re.sub(re.escape(START) + r".*?" + re.escape(END), block, text, flags=re.S)
     else:
-        text = text.replace("## Demo video\n", f"## Demo video\n\n{block}\n", 1)
+        text = text.rstrip() + f"\n\n## Demo video\n\n{block}\n"
     readme.write_text(text)
     print(f"✔ README.md links https://youtu.be/{vid}")
 
@@ -86,18 +101,26 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--video", type=pathlib.Path, default=ROOT / "dist" / "demo.mp4")
     ap.add_argument("--srt", type=pathlib.Path, default=ROOT / "dist" / "demo.srt")
-    ap.add_argument("--title", default="BreachRadar: finding the merchant that leaked the cards (GDS Pregel on Neo4j)")
-    ap.add_argument("--description", default="Demo of BreachRadar (Araujo et al., SDM 2017) as a custom Neo4j GDS Pregel algorithm. All data is synthetic.\nCode: https://github.com/halftermeyer/neo4j-gds-pregel-breach-radar")
-    ap.add_argument("--thumb-frame", type=pathlib.Path, default=ROOT / "dist" / "frames" / "s2-run__mid.png")
+    ap.add_argument("--script", type=pathlib.Path, default=ROOT / "demo-script.md")
+    ap.add_argument("--title"); ap.add_argument("--description"); ap.add_argument("--tags", help="comma separated")
+    ap.add_argument("--thumb-frame", type=pathlib.Path, help="default: the middle scene frame of dist/frames")
+    ap.add_argument("--thumb-out", default="docs/demo-thumb.png", help="where the README thumbnail is written (relative to the project)")
     ap.add_argument("--new", action="store_true", help="upload again even though a video was already uploaded")
     ap.add_argument("--readme-only", action="store_true", help="skip the upload, only refresh the README link from the saved id")
     a = ap.parse_args()
 
+    cfg = scene_config(a.script)
+    a.title = a.title or cfg.get("title", "Demo")
+    a.description = a.description or cfg.get("youtube_description") or cfg.get("subtitle", "")
+    a.tags = [t.strip() for t in (a.tags or cfg.get("youtube_tags", "")).split(",") if t.strip()]
     YT.mkdir(parents=True, exist_ok=True)
     state = YT / "last_upload.json"
-    thumb = "docs/screenshots/video-thumb.png"
-    if a.thumb_frame.exists():
-        shutil.copy(a.thumb_frame, ROOT / thumb)
+    thumb = a.thumb_out
+    frames = sorted((ROOT / "dist" / "frames").glob("*__mid.png"))
+    frame = a.thumb_frame or (frames[len(frames) // 2] if frames else None)
+    if frame and frame.exists():
+        (ROOT / thumb).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(frame, ROOT / thumb)
     if a.readme_only:
         update_readme(json.loads(state.read_text())["id"], thumb)
         return

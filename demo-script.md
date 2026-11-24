@@ -9,6 +9,8 @@ viewport: { width: 1920, height: 1080 }
 pad_s: 1.0
 voice: "Kore"
 tts_model: "gemini-2.5-flash-preview-tts"
+youtube_description: "Demo of BreachRadar (Araujo et al., SDM 2017) as a custom Neo4j GDS Pregel algorithm. All data is synthetic. Code: https://github.com/halftermeyer/neo4j-gds-pregel-breach-radar"
+youtube_tags: "neo4j, graph data science, pregel, fraud detection"
 tts_style: "Speak calmly and clearly, like a fraud analytics lead briefing a bank."
 ```
 
