@@ -1,0 +1,22 @@
+instance  0: cards=132 buckets=57 edges= 475 iters pregel=33 ref=33  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance  1: cards=168 buckets=31 edges= 546 iters pregel=42 ref=42  max|theta diff|=5.55e-17 (3-iter run 1.1e-16)  OK
+instance  2: cards=149 buckets=37 edges= 509 iters pregel=32 ref=32  max|theta diff|=1.67e-16 (3-iter run 1.1e-16)  OK
+instance  3: cards= 38 buckets=19 edges= 127 iters pregel=43 ref=43  max|theta diff|=1.39e-17 (3-iter run 5.2e-18)  OK
+instance  4: cards=191 buckets=41 edges= 684 iters pregel=34 ref=34  max|theta diff|=1.11e-16 (3-iter run 5.6e-17)  OK
+instance  5: cards=138 buckets=36 edges= 490 iters pregel=34 ref=34  max|theta diff|=5.55e-17 (3-iter run 1.7e-16)  OK
+instance  6: cards= 73 buckets=35 edges= 263 iters pregel=43 ref=43  max|theta diff|=1.11e-16 (3-iter run 1.1e-16)  OK
+instance  7: cards=193 buckets=45 edges= 678 iters pregel=35 ref=35  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance  8: cards=130 buckets=39 edges= 463 iters pregel=33 ref=33  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance  9: cards= 80 buckets=53 edges= 276 iters pregel=40 ref=40  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance 10: cards=121 buckets=24 edges= 406 iters pregel=34 ref=34  max|theta diff|=2.78e-17 (3-iter run 5.6e-17)  OK
+instance 11: cards=196 buckets=46 edges= 672 iters pregel=46 ref=46  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance 12: cards=176 buckets=14 edges= 631 iters pregel=27 ref=27  max|theta diff|=1.67e-16 (3-iter run 1.1e-16)  OK
+instance 13: cards=189 buckets=21 edges= 676 iters pregel=33 ref=33  max|theta diff|=1.11e-16 (3-iter run 8.3e-17)  OK
+instance 14: cards=179 buckets=15 edges= 623 iters pregel=29 ref=29  max|theta diff|=1.67e-16 (3-iter run 2.2e-16)  OK
+instance 15: cards=126 buckets=34 edges= 473 iters pregel=55 ref=55  max|theta diff|=8.33e-17 (3-iter run 1.1e-16)  OK
+instance 16: cards= 70 buckets=34 edges= 272 iters pregel=36 ref=36  max|theta diff|=5.55e-17 (3-iter run 2.8e-17)  OK
+instance 17: cards= 98 buckets=20 edges= 353 iters pregel=33 ref=33  max|theta diff|=1.11e-16 (3-iter run 1.7e-16)  OK
+instance 18: cards=108 buckets=48 edges= 375 iters pregel=44 ref=44  max|theta diff|=5.55e-17 (3-iter run 5.6e-17)  OK
+instance 19: cards=193 buckets=20 edges= 672 iters pregel=30 ref=30  max|theta diff|=1.11e-16 (3-iter run 1.7e-16)  OK
+
+20 instances, mismatches=0, worst theta diff=1.67e-16, worst delta-curve diff=6.52e-16 (tolerance 1e-6)

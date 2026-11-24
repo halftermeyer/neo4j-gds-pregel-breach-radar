@@ -1,0 +1,26 @@
+services:
+  neo4j:
+    image: ${NEO4J_IMAGE:-neo4j:2026.09.0-enterprise}
+    container_name: breachradar-neo4j
+    ports:
+      - "${NEO4J_HTTP_PORT:-7498}:7474"
+      - "${NEO4J_BOLT_PORT:-7699}:7687"
+    volumes:
+      # GDS is fetched here on first start; the BreachRadar plugin jar is copied here by `make plugin`.
+      - ./plugins:/plugins
+      - ./data:/data
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env}
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: eval
+      NEO4J_PLUGINS: '["graph-data-science","apoc"]'
+      NEO4J_dbms_security_procedures_allowlist: "gds.*,apoc.*,breachradar.*"
+      NEO4J_dbms_security_procedures_unrestricted: "gds.*,apoc.*,breachradar.*"
+      NEO4J_server_memory_heap_initial__size: "2G"
+      NEO4J_server_memory_heap_max__size: "4G"
+      NEO4J_server_memory_pagecache_size: "2G"
+      NEO4J_db_transaction_timeout: "600s"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 > /dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
