@@ -105,6 +105,7 @@ def main():
     ap.add_argument("--title"); ap.add_argument("--description"); ap.add_argument("--tags", help="comma separated")
     ap.add_argument("--thumb-frame", type=pathlib.Path, help="default: the middle scene frame of dist/frames")
     ap.add_argument("--thumb-out", default="docs/demo-thumb.png", help="where the README thumbnail is written (relative to the project)")
+    ap.add_argument("--dry-run", action="store_true", help="no auth, no upload: print what would be sent and refresh the README with a fake id")
     ap.add_argument("--new", action="store_true", help="upload again even though a video was already uploaded")
     ap.add_argument("--readme-only", action="store_true", help="skip the upload, only refresh the README link from the saved id")
     a = ap.parse_args()
@@ -128,6 +129,10 @@ def main():
         sys.exit(f"{a.video} not found: run `make video` first")
     if state.exists() and not a.new:
         sys.exit(f"already uploaded: https://youtu.be/{json.loads(state.read_text())['id']}  (use --new for a second video, --readme-only to refresh the README)")
+    if a.dry_run:
+        print(f"DRY RUN: would upload {a.video} (exists={a.video.exists()}) as UNLISTED\n  title: {a.title}\n  description: {a.description}\n  tags: {a.tags}\n  captions: {a.srt} (exists={a.srt.exists()})")
+        update_readme("DRYRUN0000", thumb)
+        return
     vid = upload(a)
     state.write_text(json.dumps({"id": vid}))
     update_readme(vid, thumb)
