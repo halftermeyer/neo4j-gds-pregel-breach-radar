@@ -160,3 +160,8 @@ Captured from the running app with synthetic data (default seed, p = 20%, noise 
 ## Demo video
 
 `make video` rebuilds `dist/demo.mp4` (narrated, subtitled, about 3.5 minutes) from the `scene` blocks in [`demo-script.md`](demo-script.md): it needs the app running on port 5173, the demo database up, `GEMINI_API_KEY` in the environment, and `pip install playwright google-genai pyyaml` with `playwright install chromium`. `make video-silent` is a rehearsal with no TTS. Re-run it after UI changes: a failure names the scene that broke. The recording starts by resetting and re-ingesting the database. `dist/` is a build artifact and is not committed.
+
+`make video-publish` uploads `dist/demo.mp4` to YouTube as **unlisted** (hardcoded) with the SRT captions, then writes the link between the `demo-video` markers below. One-time OAuth setup is described at the top of [`video/tools/youtube_upload.py`](video/tools/youtube_upload.py); the token stays in the gitignored `video/.yt/`.
+
+<!-- demo-video:start -->
+<!-- demo-video:end -->

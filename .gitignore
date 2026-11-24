@@ -10,3 +10,4 @@ video/raw/
 video/audio/
 video/scenes.json
 __pycache__/
+video/.yt/

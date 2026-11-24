@@ -43,3 +43,7 @@ video:
 	python3 video/tools/record.py --script demo-script.md --base-url http://localhost:5173 --cursor
 	python3 video/tools/assemble.py
 	python3 video/tools/frames.py
+
+video-publish:   ## upload dist/demo.mp4 to YouTube (UNLISTED) and link it from the README
+	python3 video/tools/youtube_upload.py
+.PHONY: video-publish
