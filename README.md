@@ -160,4 +160,5 @@ Captured from the running app with synthetic data (default seed, p = 20%, noise 
 ## Demo video
 
 <!-- demo-video:start -->
+[![Demo video (YouTube, unlisted)](docs/demo-thumb.png)](https://youtu.be/26LxPyHkDUc)
 <!-- demo-video:end -->

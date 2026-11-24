@@ -11,3 +11,4 @@ video/audio/
 video/scenes.json
 __pycache__/
 video/.yt/
+.DS_Store
