@@ -32,3 +32,14 @@ bench:
 
 down:
 	docker compose down
+
+# --- demo video (video/tools, from the demo-video skill). Needs GEMINI_API_KEY in the environment.
+.PHONY: video video-silent
+video-silent:
+	python3 video/tools/record.py --script demo-script.md --base-url http://localhost:5173 --cursor --no-audio
+	python3 video/tools/assemble.py --no-audio
+video:
+	python3 video/tools/tts.py --script demo-script.md
+	python3 video/tools/record.py --script demo-script.md --base-url http://localhost:5173 --cursor
+	python3 video/tools/assemble.py
+	python3 video/tools/frames.py

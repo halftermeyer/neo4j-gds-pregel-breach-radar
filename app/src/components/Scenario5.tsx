@@ -173,12 +173,12 @@ export default function Scenario5() {
                   {[50, 100, 200, 500].map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </label>
-              <button className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Generate {fmt(edges)} edges and run BreachRadar</button>
+              <button data-testid="btn-run-s5" className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Generate {fmt(edges)} edges and run BreachRadar</button>
               <button className="btn" disabled={busy || runs.length === 0} onClick={() => void cleanup()}>Remove benchmark data</button>
             </div>
             <p className="hint">Concurrency above 4 needs a GDS licence key, so this demo caps it at 4. Generation goes through Cypher in batches and takes the longest; only the Pregel compute time reflects the algorithm. The convergence test sums |Δθ| over every bucket, so on millions of edges it needs a looser ε than on the small demo graph (1e-6).</p>
             {(busy || steps.length > 0) && (
-              <div className="job">
+              <div className="job" data-testid="s5-progress">
                 <div className="bar"><i style={{ width: `${Math.round(prog.frac * 100)}%` }} /></div>
                 <div className="job-msg">{busy ? prog.msg : "Finished"}</div>
                 <ul className="steps">{steps.map((s, i) => <li key={i} className="done"><span className="tick">✓</span>{s}</li>)}</ul>
@@ -189,7 +189,7 @@ export default function Scenario5() {
 
           {last && (
             <>
-              <div className="stats">
+              <div className="stats" data-testid="s5-done">
                 <Stat label="unique card–bucket edges" value={fmt(last.edges)} />
                 <Stat label="nodes in the projection" value={fmt(last.nodes)} />
                 <Stat label="Pregel compute" value={ms(last.computeMs)} tone="good" sub={`${fmt(Math.round((last.edges * 2 * last.supersteps) / Math.max(1, last.computeMs) * 1000))} edge visits / s`} />

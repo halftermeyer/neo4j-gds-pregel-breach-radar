@@ -5,3 +5,8 @@ build/
 plugins/*.jar
 *.tsbuildinfo
 .env
+dist/
+video/raw/
+video/audio/
+video/scenes.json
+__pycache__/

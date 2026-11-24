@@ -121,12 +121,13 @@ export default function Scenario3() {
           </div>
           <div className="btn-row">
             <button className="btn primary" disabled={busy} onClick={() => void rerun()}>Re-run BreachRadar at these settings</button>
-            <button className="btn" disabled={busy} onClick={() => void sweep("p")}>Sweep p from 10% to 100% (8 runs)</button>
+            <button data-testid="btn-sweep-p" className="btn" disabled={busy} onClick={() => void sweep("p")}>Sweep p from 10% to 100% (8 runs)</button>
             <button className="btn" disabled={busy} onClick={() => void sweep("noise")}>Sweep noise from 0 to +100% (5 runs)</button>
             {sweeping && <span className="hint">sweeping {sweeping === "p" ? "stealing probability" : "noise"}…</span>}
           </div>
           {(busy || run) && <StepList steps={run?.steps ?? []} running={busy} current={step} />}
           {err && <div className="bad">{err}</div>}
+          {!busy && sweepP.length >= 8 && <div className="hint" data-testid="s3-sweep-done">Sweep complete: 8 fresh Pregel runs.</div>}
         </section>
 
         {run && rankings && (
@@ -138,14 +139,14 @@ export default function Scenario3() {
               <Stat label="Pregel compute" value={ms(run.summary.computeMillis)} />
               <Stat label="whole re-run" value={ms(run.totalMs)} sub="labels, projection, Pregel, scoring" />
             </div>
-            <section className="card">
+            <section className="card" data-testid="s3-run">
               <h3>This run</h3>
               <ComparisonTable run={run} rankings={rankings} />
             </section>
           </>
         )}
 
-        <div className="grid2">
+        <div className="grid2" data-testid="s3-curves">
           <section className="card">
             <h3>Precision vs stealing probability <small>(noise +{noise}%)</small></h3>
             <LineChart series={series(sweepP, "precision")} xLabel="stealing probability p (%)" yLabel="precision@K" yMin={0} yMax={1} xMin={10} xMax={100} xTicks={[10, 25, 50, 75, 100]} yFormat={(y) => pct(y)} empty="Run the p sweep to draw this curve" />

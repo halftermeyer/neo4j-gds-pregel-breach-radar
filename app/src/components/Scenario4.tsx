@@ -136,7 +136,7 @@ export default function Scenario4() {
             </label>
           </div>
           <div className="btn-row">
-            <button className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Run BreachRadar as of week {decision} and simulate the reissue</button>
+            <button data-testid="btn-run-s4" className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Run BreachRadar as of week {decision} and simulate the reissue</button>
             <span className="hint">Only fraud known by the end of week {decision} is given to the algorithm. Fraud after that is what the reissue can prevent.</span>
           </div>
           {(busy || run) && <StepList steps={run?.steps ?? []} running={busy} current={step} />}
@@ -145,7 +145,7 @@ export default function Scenario4() {
 
         {run && v && (
           <>
-            <section className="card">
+            <section className="card" data-testid="s4-threshold">
               <h3>Reissue every card seen at a bucket with θ ≥ threshold <Sim>simulated</Sim></h3>
               <Slider label="θ threshold" value={thr} min={0.01} max={Math.max(0.05, Math.ceil(v.maxTheta * 100) / 100)} step={0.01} format={(x) => x.toFixed(2)} onChange={setThr} />
               <div className="stats">
@@ -158,7 +158,7 @@ export default function Scenario4() {
             </section>
 
             <div className="grid2">
-              <section className="card">
+              <section className="card" data-testid="s4-equal">
                 <h3>Same reissue volume, different ranking <Sim>simulated</Sim></h3>
                 <p className="hint">Each method reissues buckets in its own order until it has replaced at least as many cards as BreachRadar above.</p>
                 <table className="tbl">
@@ -173,7 +173,7 @@ export default function Scenario4() {
                   </tbody>
                 </table>
               </section>
-              <section className="card">
+              <section className="card" data-testid="s4-curve">
                 <h3>Fraud prevented vs reissue cost <Sim>simulated</Sim></h3>
                 <LineChart series={v.series} xLabel="reissue cost ($)" yLabel="fraud prevented ($)" height={300} xFormat={(x) => usd(x)} yFormat={(y) => usd(y)} />
                 <p className="hint">Curves are above the green line where reissuing pays for itself. Each point adds one more bucket in the method's ranking.</p>

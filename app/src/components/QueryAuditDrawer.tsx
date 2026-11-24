@@ -61,14 +61,14 @@ export default function QueryAuditDrawer() {
 
   return (
     <>
-      <button onClick={toggle} className="audit-toggle">
+      <button data-testid="audit-toggle" onClick={toggle} className="audit-toggle">
         <span className="audit-toggle-icon">{open ? ">" : "<"}</span>
         <span className="audit-toggle-label">
           Cypher ({logCount})
         </span>
       </button>
 
-      <div className={`audit-drawer ${open ? "open" : ""}`}>
+      <div data-testid="audit-drawer" className={`audit-drawer ${open ? "open" : ""}`}>
         <div className="audit-header">
           <h3>Cypher Audit Log</h3>
           <div className="audit-actions">

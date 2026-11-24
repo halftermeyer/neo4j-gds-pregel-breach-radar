@@ -98,15 +98,15 @@ export default function SetupTab() {
             {field("seed", "Seed")}
           </div>
           <div className="btn-row">
-            <button className="btn primary" disabled={job.running || !env?.connected || (env?.procedures.length ?? 0) < 3} onClick={() => void ingest(g)}>
+            <button data-testid="btn-generate" className="btn primary" disabled={job.running || !env?.connected || (env?.procedures.length ?? 0) < 3} onClick={() => void ingest(g)}>
               {meta?.exists ? "Regenerate and re-ingest" : "Generate and ingest"}
             </button>
-            <button className="btn" disabled={job.running || !env?.connected} onClick={() => void reset()}>Reset demo (empty database)</button>
+            <button data-testid="btn-reset" className="btn" disabled={job.running || !env?.connected} onClick={() => void reset()}>Reset demo (empty database)</button>
           </div>
-          {(job.running || job.log.length > 0 || job.error) && (
+          {(job.running || job.log.length > 0 || job.error || job.frac > 0) && (
             <div className="job">
               <div className="bar"><i style={{ width: `${Math.round(job.frac * 100)}%` }} /></div>
-              <div className="job-msg">{job.error ? <span className="bad">{job.error}</span> : job.msg}</div>
+              <div className="job-msg" data-testid={!job.running && job.frac === 1 ? (job.kind === "ingest" ? "ingest-done" : "reset-done") : undefined}>{job.error ? <span className="bad">{job.error}</span> : job.msg}</div>
               <pre className="log">{job.log.join("\n")}</pre>
             </div>
           )}
@@ -114,7 +114,7 @@ export default function SetupTab() {
       </div>
 
       {meta?.exists && (
-        <section className="card">
+        <section className="card" data-testid="graph-stats">
           <h3>What is in the graph now</h3>
           <div className="stats">
             <Stat label="cards" value={fmt(meta.cards)} />

@@ -148,7 +148,7 @@ export default function Scenario2() {
       <NeedsData>
         <section className="card">
           <div className="btn-row">
-            <button className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Run BreachRadar on the database</button>
+            <button data-testid="btn-run-s2" className="btn primary big" disabled={busy} onClick={() => void go()}>▶ Run BreachRadar on the database</button>
             <span className="hint">Stealing probability {pct(defaults.p)}, noise +{defaults.noise}%. Every statement and the Pregel call are in the audit drawer (right edge).</span>
           </div>
           {(busy || run) && <StepList steps={run?.steps ?? []} running={busy} current={step} />}
@@ -157,7 +157,7 @@ export default function Scenario2() {
 
         {run && view && cur && (
           <>
-            <div className="stats">
+            <div className="stats" data-testid="s2-done">
               <Stat label="theta iterations to converge" value={run.summary.iterations} sub={run.summary.didConverge ? `converged (ε = 1e-6)` : "hit max iterations"} tone={run.summary.didConverge ? "good" : "warn"} />
               <Stat label="Pregel supersteps" value={run.summary.supersteps} />
               <Stat label="Pregel compute" value={ms(run.summary.computeMillis)} sub="inside the GDS procedure" />
@@ -166,7 +166,7 @@ export default function Scenario2() {
               <Stat label="bipartite edges" value={fmt(run.projected.relationshipCount / 2)} />
             </div>
 
-            <section className="card">
+            <section className="card" data-testid="s2-blame">
               <h3>Blame flowing from cards to buckets</h3>
               <div className="player">
                 <button className="btn" onClick={() => { if (frame >= frames.length - 1) setFrame(0); setPlaying(!playing); }}>{playing ? "❚❚ Pause" : "▶ Play"}</button>
@@ -230,13 +230,13 @@ export default function Scenario2() {
                   </tbody>
                 </table>
               </section>
-              <section className="card">
+              <section className="card" data-testid="s2-scored">
                 <h3>Scored against the injected ground truth</h3>
                 <ComparisonTable run={run} rankings={view.rankings} />
               </section>
             </div>
 
-            <section className="card">
+            <section className="card" data-testid="s2-pr">
               <h3>Precision–recall, all methods</h3>
               <LineChart series={view.curves} xLabel="recall" yLabel="precision" xMin={0} xMax={1} yMin={0} yMax={1} height={320} xFormat={(x) => pct(x)} yFormat={(y) => pct(y)} />
               <pre className="code">{`CALL breachradar.pregel.write('br', {alpha: 0.2, beta: 15, epsilon: 1e-6, maxIterations: 100, concurrency: 4,

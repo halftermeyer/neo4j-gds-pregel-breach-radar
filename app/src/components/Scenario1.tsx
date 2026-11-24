@@ -117,7 +117,7 @@ export default function Scenario1() {
       <NeedsData>
         <section className="card">
           <div className="btn-row">
-            <button className="btn primary" disabled={busy} onClick={() => void load()}>
+            <button data-testid="btn-load-feed" className="btn primary" disabled={busy} onClick={() => void load()}>
               {raw ? "Reload the fraud feed" : "Load the fraud feed and rank merchants the naive way"}
             </button>
             <span className="hint">Stealing probability {pct(defaults.p)}, noise +{defaults.noise}% fraud cards with no POC. Nothing runs in the algorithm yet: these are plain Cypher counts.</span>
@@ -133,17 +133,17 @@ export default function Scenario1() {
               <Stat label="merchant-weeks with ≥ 1 fraud card" value={fmt(raw.buckets.length)} />
               <Stat label="largest fraud-card count in one merchant-week" value={Math.max(...raw.buckets.map((b) => b.f))} />
             </div>
-            <div className="grid2">
+            <div className="grid2" data-testid="s1-rankings">
               <RankTable title="Top 10 by fraud-card count" note="Biggest number of fraud cards. Big, busy merchants win just by having more customers." rows={view.byCount} stats={view.stats} labelOf={bucketLabel} truth={raw.truth} reveal={reveal} />
               <RankTable title="Top 10 by fraud-card ratio" note="Share of the merchant-week's cards that are fraud. Tiny merchants with 2 customers, both fraud, win by chance." rows={view.byRatio} stats={view.stats} labelOf={bucketLabel} truth={raw.truth} reveal={reveal} />
             </div>
-            <section className="card">
+            <section className="card" data-testid="s1-why">
               <h3>Why both rankings fail</h3>
               <div className="btn-row">
-                <button className="btn" onClick={() => setReveal(!reveal)}>{reveal ? "Hide" : "Reveal"} the injected points of compromise</button>
+                <button data-testid="btn-reveal" className="btn" onClick={() => setReveal(!reveal)}>{reveal ? "Hide" : "Reveal"} the injected points of compromise</button>
                 <span className="hint">Each dot is a merchant-week. Count follows size (right); ratio follows small numbers (top-left).</span>
               </div>
-              <Scatter dots={view.dots} xLabel="cards on the merchant-week (n)" yLabel="fraud cards (f)" logX />
+              <div data-testid="s1-scatter"><Scatter dots={view.dots} xLabel="cards on the merchant-week (n)" yLabel="fraud cards (f)" logX /></div>
               {reveal && (
                 <p className="callout">
                   The real compromised merchant-weeks (red rings) are <b>not</b> the top of either list. The question is a <b>causal attribution</b> problem:
